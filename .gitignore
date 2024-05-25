@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 lightning_logs/*
 # C extensions
+wandb/*
+tmp/*
 *.so
 data/
 # Distribution / packaging
