@@ -6,6 +6,7 @@ lightning_logs/*
 # C extensions
 wandb/*
 tmp/*
+artifacts/*
 *.so
 data/
 # Distribution / packaging
