@@ -169,9 +169,12 @@ class Flowmeter:
         """
         ip_fields = [field.name for field in IP().fields_desc]
         tcp_fields = [field.name for field in TCP().fields_desc]
+        tcp_fields.remove('flags')
+        tcp_fields.append('tcp_flags')
         udp_fields = [field.name for field in UDP().fields_desc]
 
         dataframe_fields = ip_fields + ['time'] + tcp_fields + ['size','payload','payload_raw','payload_hex']
+        # dataframe_fields = list(set(dataframe_fields))
 
         # Create blank DataFrame
         df = pd.DataFrame(columns=dataframe_fields)
@@ -619,21 +622,6 @@ class Flowmeter:
         src_times = self.get_dst_times(df)
         return  src_times.diff().dropna().std() 
 
-    def remove_duplicate_flags_col(self, df):
-    
-        """
-        This function removes the first occurence
-        of the 'flags' column due to multiple
-        columns named 'flags'
-            
-        Args:
-            df (Dataframe): A bi-directional flow pandas dataframe.
-        """
-        
-        column_numbers = [x for x in range(df.shape[1])]
-        column_numbers.remove(5)
-        return df.iloc[:, column_numbers]
-
     def decode_flags(self, df):
     
         """
@@ -648,18 +636,18 @@ class Flowmeter:
         return df["flags"].apply(lambda x: str(x))
 
     def count_flags(self, df, ip, flag):
-        
         """
         This function counts the total number of
         flags from the specified origin.
-            
+        
         Args:
             df (Dataframe): A bi-directional flow pandas dataframe.
             ip (String): A string representation of the IP address
             flag (String): The first letter of the flag to search.
         """
         
-        df = df.loc[df["src"]==ip]
+        df = df.loc[df["src"]==ip].copy()
+        # print(df["flags"].unique())
         df["flags"] = self.decode_flags(df).str.contains(flag)
         return df[df["flags"] == True].shape[0]
 
@@ -674,7 +662,7 @@ class Flowmeter:
         """
         
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         return self.count_flags(df, src, "P")
 
@@ -689,7 +677,7 @@ class Flowmeter:
         """
         
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_dst_ip(df)
         return self.count_flags(df, src, "P")
 
@@ -704,7 +692,7 @@ class Flowmeter:
         """
         
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         return self.count_flags(df, src, "U")
 
@@ -719,7 +707,7 @@ class Flowmeter:
         """
         
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_dst_ip(df)
         return self.count_flags(df, src, "U")
 
@@ -922,7 +910,7 @@ class Flowmeter:
             df (Dataframe): A bi-directional flow pandas dataframe.
         """
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         dst = self.get_dst_ip(df)
         return self.count_flags(df, src, "P") + self.count_flags(df, dst, "P")
@@ -938,7 +926,7 @@ class Flowmeter:
             df (Dataframe): A bi-directional flow pandas dataframe.
         """
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         dst = self.get_dst_ip(df)
         return self.count_flags(df, src, "F") + self.count_flags(df, dst, "F")
@@ -953,7 +941,7 @@ class Flowmeter:
             df (Dataframe): A bi-directional flow pandas dataframe.
         """
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         dst = self.get_dst_ip(df)
         return self.count_flags(df, src, "S") + self.count_flags(df, dst, "S")
@@ -969,7 +957,7 @@ class Flowmeter:
             df (Dataframe): A bi-directional flow pandas dataframe.
         """
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         dst = self.get_dst_ip(df)
         return self.count_flags(df, src, "R") + self.count_flags(df, dst, "R")
@@ -984,7 +972,7 @@ class Flowmeter:
             df (Dataframe): A bi-directional flow pandas dataframe.
         """
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         dst = self.get_dst_ip(df)
         return self.count_flags(df, src, "A") + self.count_flags(df, dst, "A")
@@ -1000,7 +988,7 @@ class Flowmeter:
             df (Dataframe): A bi-directional flow pandas dataframe.
         """
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         dst = self.get_dst_ip(df)
         return self.count_flags(df, src, "U") + self.count_flags(df, dst, "U")
@@ -1015,7 +1003,7 @@ class Flowmeter:
             df (Dataframe): A bi-directional flow pandas dataframe.
         """
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         dst = self.get_dst_ip(df)
         return self.count_flags(df, src, "C") + self.count_flags(df, dst, "C")
@@ -1031,7 +1019,7 @@ class Flowmeter:
             df (Dataframe): A bi-directional flow pandas dataframe.
         """
         
-        df = self.remove_duplicate_flags_col(df)
+        # df = self.remove_duplicate_flags_col(df)
         src = self.get_src_ip(df)
         dst = self.get_dst_ip(df)
         return self.count_flags(df, src, "E") + self.count_flags(df, dst, "E")
@@ -1269,6 +1257,7 @@ class Flowmeter:
 
        
         flow = self.build_dataframe(packet_list)
+        # display(flow['flags'].unique())
         result = pd.DataFrame(columns=self.columns)
         result["flow"] = [self.build_index(flow)]
         result["src"] = [self.get_src_ip(flow)]
