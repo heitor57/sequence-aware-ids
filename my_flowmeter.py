@@ -1032,6 +1032,7 @@ class Flowmeter:
         a["time"] = pd.to_datetime(df["time"], unit="s")
         a["count"] = 1
         a.set_index(["time"], inplace=True)
+        # print(a)
         a["rolling"] = a.rolling('100ms').sum()
         return a["rolling"].mean()
 
@@ -1244,9 +1245,11 @@ class Flowmeter:
 
         gc.collect()
         # print(("\nEntering {}").format(flow)) # Test
-
-       
-        flow = self.build_dataframe(packet_list)
+        
+        if isinstance(packet_list,pd.DataFrame):
+            flow = packet_list
+        else:
+            flow = self.build_dataframe(packet_list)
         # display(flow['flags'].unique())
         result = pd.DataFrame(columns=self.columns)
         result["flow"] = [self.build_index(flow)]
