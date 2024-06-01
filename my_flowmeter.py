@@ -158,7 +158,6 @@ class Flowmeter:
         return sess
 
     def build_dataframe(self, packet_list):
-
         """
         This function takes in a scapy PacketList object and 
         builds a pandas dataframe.
@@ -173,18 +172,15 @@ class Flowmeter:
         tcp_fields.append('tcp_flags')
         udp_fields = [field.name for field in UDP().fields_desc]
 
-        dataframe_fields = ip_fields + ['time'] + tcp_fields + ['size','payload','payload_raw','payload_hex']
-        # dataframe_fields = list(set(dataframe_fields))
+        dataframe_fields = ip_fields + ['time'] + tcp_fields + ['size', 'payload', 'payload_raw', 'payload_hex']
 
-        # Create blank DataFrame
-        df = pd.DataFrame(columns=dataframe_fields)
+        rows = []
+
         for packet in packet_list[IP]:
-            # Field array for each row of DataFrame
             field_values = []
-            # Add all IP fields to dataframe
+
             for field in ip_fields:
                 if field == 'options':
-                    # Retrieving number of options defined in IP Header
                     field_values.append(len(packet[IP].fields[field]))
                 else:
                     field_values.append(packet[IP].fields[field])
@@ -200,22 +196,16 @@ class Flowmeter:
                         field_values.append(packet[layer_type].fields[field])
                 except:
                     field_values.append(None)
-            
-            # Append payload
+
             field_values.append(len(packet))
             field_values.append(len(packet[layer_type].payload))
             field_values.append(packet[layer_type].payload.original)
             field_values.append(binascii.hexlify(packet[layer_type].payload.original))
-            # Add row to DF
-            df_append = pd.DataFrame([field_values], columns=dataframe_fields)
-            df = pd.concat([df, df_append], axis=0)
-            
-        # Reset Index
-        df = df.reset_index()
-        # Drop old index column
-        df = df.drop(columns="index")
-        return df
 
+            rows.append(field_values)
+
+        df = pd.DataFrame(rows, columns=dataframe_fields)
+        return df
     def build_sessions(self):
 			  
         """
