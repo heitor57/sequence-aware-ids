@@ -10,6 +10,7 @@ a.out
 artifacts/*
 *.so
 data/
+views/*
 # Distribution / packaging
 .Python
 build/
