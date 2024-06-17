@@ -55,16 +55,16 @@ def generate_latex_table(df, metric, file_path):
         # Number of packets columns
         num_packet_cols = columns_str[1:]
         
-        latex_table = "\\begin{table}[H]\n\\centering\n\\begin{tabular}{|c|" + "c|" * len(num_packet_cols) + "}\n\\hline\n"
+        latex_table = "\\begin{table}[H]\n\\centering\n"+r'\begin{adjustbox}{width=\textwidth}'+"\n\\begin{tabular}{|c|" + "c|" * len(num_packet_cols) + "}\n\\hline\n"
         
         # Multi-row header
-        latex_table += "\\multirow{2}{*}{model} & \\multicolumn{" + str(len(num_packet_cols)) + "}{c|}{Number of Packets} \\\\\n\\cline{2-" + str(len(columns)) + "}\n"
+        latex_table += "\\multirow{2}{*}{Model} & \\multicolumn{" + str(len(num_packet_cols)) + "}{c|}{Number of Packets} \\\\\n\\cline{2-" + str(len(columns)) + "}\n"
         latex_table += " & " + " & ".join(num_packet_cols) + " \\\\\n\\hline\n"
         
         for _, row in df.iterrows():
             latex_table += " & ".join([f"{row[col]:.4f}" if isinstance(row[col], float) else str(row[col]) for col in columns]) + " \\\\\n"
         
-        latex_table += "\\hline\n\\end{tabular}\n\\caption{" + metrics_pretty_names[metric] + " by Model for Flows with at Most " + packet_numbers + " Packets, and Complete Flows}\n\\label{tab:" + metric.lower().replace(" ", "_") + "_results}\n\\end{table}"
+        latex_table += "\\hline\n\\end{tabular}\n"+r'\end{adjustbox}'+"\n\\caption{" + metrics_pretty_names[metric] + " by Model for Flows with at Most " + packet_numbers + " Packets, and Complete Flows}\n\\label{tab:" + metric.lower().replace(" ", "_") + "_results}\n\\end{table}"
         return latex_table
 
     # Generate the LaTeX table
@@ -123,12 +123,12 @@ def generate_latex_table_full(df, file_path):
     # LaTeX table generation function
     def df_to_latex_pivot(df, columns):
         columns_str = list(map(str, columns))
-        latex_table = "\\begin{table}[H]\n\\centering\n\\begin{tabular}{|" + " | ".join(["c"] * len(columns)) + "|}\n\\hline\n"
+        latex_table = "\\begin{table}[H]\n\\centering\n"+r'\begin{adjustbox}{width=\textwidth}'+"\n\\begin{tabular}{|" + " | ".join(["c"] * len(columns)) + "|}\n\\hline\n"
         latex_table += " & ".join(map(lambda x : metrics_pretty_names[x], columns_str)) + " \\\\\n\\hline\n"
         for _, row in df.iterrows():
             latex_table += " & ".join([f"{row[col]:.4f}" if isinstance(row[col], float) else str(row[col]) for col in columns]) + " \\\\\n"
 
-        latex_table += "\\hline\n\\end{tabular}\n\\caption{Results across multiple metrics with all complete flows.}\n\\label{tab:full_packets_results}\n\\end{table}"
+        latex_table += "\\hline\n\\end{tabular}"+r"\end{adjustbox}"+"\n\\caption{Results across multiple metrics with all complete flows.}\n\\label{tab:full_packets_results}\n\\end{table}"
         return latex_table
 
     # Generate the LaTeX table
