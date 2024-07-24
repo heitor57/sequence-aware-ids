@@ -12,11 +12,14 @@ metrics_pretty_names = {
     'model': 'Model'
     
 }
+
+MODELS = ['Random Forest','Decision Tree','MLP','Adaboost', 'Naive Bayes', 'Quadratic Discriminant Analysis','Linear Discriminant Analysis','Logistic Regression','RNN','GRU','Transformer', "Transformer*"]
 pathlib.Path('views/').mkdir(parents=True, exist_ok=True) 
 # Load the data
 df = pd.read_json('data/results.json', lines=True)
 df_fids = pd.read_json('data/results_fids.json', lines=True)
 df = pd.concat([df, df_fids], axis=0)
+df= df[df['model'].isin(MODELS)]
 # Ensure the output_date is in datetime format
 df['output_date'] = pd.to_datetime(df['output_date'])
 
@@ -48,7 +51,8 @@ def generate_latex_table(df, metric, file_path):
     
     # Extract the packet numbers for the caption
     packet_numbers = ", ".join(map(str, columns_packet_numbers))  # Exclude 'Model' column
-    
+    df_pivot = pd.concat([df_pivot[df_pivot['model']==model] for model in MODELS],axis=0)
+    print(df_pivot)
     # LaTeX table generation function with multi-row header
     def df_to_latex_pivot(df, columns):
         columns_str = list(map(str, columns))
