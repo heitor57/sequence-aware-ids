@@ -58,6 +58,7 @@ def generate_latex_table(df, metric, file_path):
         columns_str = list(map(str, columns))
         # Number of packets columns
         num_packet_cols = columns_str[1:]
+        num_packet_cols[-1] = 'Complete Flows'
         
         latex_table = "\\begin{table}[H]\n\\centering\n"+r'\begin{adjustbox}{width=\textwidth}'+"\n\\begin{tabular}{|c|" + "c|" * len(num_packet_cols) + "}\n\\hline\n"
         
@@ -66,7 +67,7 @@ def generate_latex_table(df, metric, file_path):
         latex_table += " & " + " & ".join(num_packet_cols) + " \\\\\n\\hline\n"
         
         for _, row in df.iterrows():
-            latex_table += " & ".join([f"{row[col]:.4f}" if isinstance(row[col], float) else str(row[col]) for col in columns]) + " \\\\\n"
+            latex_table += " & ".join([f"{row[col]:.3f}" if isinstance(row[col], float) else str(row[col]) for col in columns]) + " \\\\\n"
         
         latex_table += "\\hline\n\\end{tabular}\n"+r'\end{adjustbox}'+"\n\\caption{" + metrics_pretty_names[metric] + " by Model for Flows with at Most " + packet_numbers + " Packets, and Complete Flows}\n\\label{tab:" + metric.lower().replace(" ", "_") + "_results}\n\\end{table}"
         return latex_table
@@ -123,7 +124,7 @@ def generate_latex_table_full(df, file_path):
     # ]
 
     # columns = ['model'] + [col for col in df.columns if col not in excluded_columns]
-    columns= ['model','accuracy','tpr','fpr',"average_throughput","standard_deviation_throughput","average_total_throughput","standard_deviation_total_throughput"]
+    columns= ['model','accuracy','tpr','fpr',"average_throughput","average_total_throughput"]
     # LaTeX table generation function
     def df_to_latex_pivot(df, columns):
         columns_str = list(map(str, columns))
@@ -134,7 +135,7 @@ def generate_latex_table_full(df, file_path):
 
         latex_table += "\\hline\n\\end{tabular}"+r"\end{adjustbox}"+"\n\\caption{Results across multiple metrics with all complete flows.}\n\\label{tab:full_packets_results}\n\\end{table}"
         return latex_table
-
+    df = pd.concat([df[df['model']==model] for model in MODELS],axis=0)
     # Generate the LaTeX table
     latex_code = df_to_latex_pivot(df, columns)
     
