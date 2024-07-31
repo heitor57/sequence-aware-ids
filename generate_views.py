@@ -20,6 +20,11 @@ df = pd.read_json('data/results.json', lines=True)
 df_fids = pd.read_json('data/results_fids.json', lines=True)
 df = pd.concat([df, df_fids], axis=0)
 df= df[df['model'].isin(MODELS)]
+def percentage_transform(df,column):
+    df[column]=(df[column]*100).map(lambda x: f'{x:.2f}\\%')
+percentage_transform(df,'accuracy')
+percentage_transform(df,'tpr')
+percentage_transform(df,'fpr')
 # Ensure the output_date is in datetime format
 df['output_date'] = pd.to_datetime(df['output_date'])
 
@@ -60,7 +65,7 @@ def generate_latex_table(df, metric, file_path):
         num_packet_cols = columns_str[1:]
         num_packet_cols[-1] = 'Complete Flows'
         
-        latex_table = "\\begin{table}[H]\n\\centering\n"+r'\begin{adjustbox}{width=\textwidth}'+"\n\\begin{tabular}{|c|" + "c|" * len(num_packet_cols) + "}\n\\hline\n"
+        latex_table = "\\begin{table*}\n\\centering\n"+r'\begin{adjustbox}{width=\textwidth}'+"\n\\begin{tabular}{|c|" + "c|" * len(num_packet_cols) + "}\n\\hline\n"
         
         # Multi-row header
         latex_table += "\\multirow{2}{*}{Model} & \\multicolumn{" + str(len(num_packet_cols)) + "}{c|}{Number of Packets} \\\\\n\\cline{2-" + str(len(columns)) + "}\n"
@@ -69,7 +74,7 @@ def generate_latex_table(df, metric, file_path):
         for _, row in df.iterrows():
             latex_table += " & ".join([f"{row[col]:.3f}" if isinstance(row[col], float) else str(row[col]) for col in columns]) + " \\\\\n"
         
-        latex_table += "\\hline\n\\end{tabular}\n"+r'\end{adjustbox}'+"\n\\caption{" + metrics_pretty_names[metric] + " by Model for Flows with at Most " + packet_numbers + " Packets, and Complete Flows}\n\\label{tab:" + metric.lower().replace(" ", "_") + "_results}\n\\end{table}"
+        latex_table += "\\hline\n\\end{tabular}\n"+r'\end{adjustbox}'+"\n\\caption{" + metrics_pretty_names[metric] + " by Model for Flows with at Most " + packet_numbers + " Packets, and Complete Flows}\n\\label{tab:" + metric.lower().replace(" ", "_") + "_results}\n\\end{table*}"
         return latex_table
 
     # Generate the LaTeX table
@@ -128,12 +133,12 @@ def generate_latex_table_full(df, file_path):
     # LaTeX table generation function
     def df_to_latex_pivot(df, columns):
         columns_str = list(map(str, columns))
-        latex_table = "\\begin{table}[H]\n\\centering\n"+r'\begin{adjustbox}{width=\textwidth}'+"\n\\begin{tabular}{|" + " | ".join(["c"] * len(columns)) + "|}\n\\hline\n"
+        latex_table = "\\begin{table*}\n\\centering\n"+r'\begin{adjustbox}{width=\textwidth}'+"\n\\begin{tabular}{|" + " | ".join(["c"] * len(columns)) + "|}\n\\hline\n"
         latex_table += " & ".join(map(lambda x : metrics_pretty_names[x], columns_str)) + " \\\\\n\\hline\n"
         for _, row in df.iterrows():
             latex_table += " & ".join([f"{row[col]:.4f}" if isinstance(row[col], float) else str(row[col]) for col in columns]) + " \\\\\n"
 
-        latex_table += "\\hline\n\\end{tabular}"+r"\end{adjustbox}"+"\n\\caption{Results across multiple metrics with all complete flows.}\n\\label{tab:full_packets_results}\n\\end{table}"
+        latex_table += "\\hline\n\\end{tabular}"+r"\end{adjustbox}"+"\n\\caption{Results across multiple metrics with all complete flows.}\n\\label{tab:full_packets_results}\n\\end{table*}"
         return latex_table
     df = pd.concat([df[df['model']==model] for model in MODELS],axis=0)
     # Generate the LaTeX table
