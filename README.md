@@ -9,9 +9,9 @@ This repository contains code and resources for developing and testing a Fast Vi
 - `LICENSE`: License information for the project.
 - `LICENSEFLOWMETER`: Additional license information related to flowmeter usage.
 - `baselines.ipynb`: Jupyter notebook for baseline tests and time computation.
-- `baselines_dataset.ipynb`: Jupyter notebook for generating statistics for the baselines.
+- `baselines_dataset.ipynb`: Jupyter notebook for generating dataset with statistics to run the baselines.
 - `constants.py`: Python script defining constants used across the project.
-- `fids-own.ipynb`: Jupyter notebook for the custom model implementation and testing.
+- `fids.ipynb`: Jupyter notebook for the custom model implementation and testing.
 - `my_flowmeter.py`: Python script intended for faster processing of the baselines dataset.
 - `scapy_dataset.ipynb`: Jupyter notebook for dataset processing using Scapy.
 
