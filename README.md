@@ -3,10 +3,10 @@
 This repository contains code and resources for developing and testing Sequence-aware Neural Networks for intrusion detection using the IEC 60870-5-104 Intrusion Detection Dataset.
 
 ## Create the Conda environment
-Create the environment using the provided `environment.yml` file:
+Create the environment using the provided `spec-file.yml` file:
 
 ```sh
-  conda env create -f environment.yml
+  conda env create -f spec-file.yml
   # Verify that the environment was created successfully:
   conda env list
   # Activate the environment
