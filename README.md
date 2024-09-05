@@ -1,6 +1,6 @@
 # Fast Sequence-aware Neural Networks for Intrusion Detection
 
-This repository contains code and resources for developing and testing Sequence-aware Neural Networks for intrusion detection using the IEC 60870-5-104 Intrusion Detection Dataset.
+This repository contains code and resources for developing and testing Sequence-Aware Neural Networks for intrusion detection using the IEC 60870-5-104 Intrusion Detection Dataset. The work presented here is part of the work titled "Real-time Intrusion Detection with Sequence-Aware Neural Networks for the Internet of Medical Things," which was submitted to the IEEE Virtual Conferences on Communications (VCC) 2024 on September 1st, 2024.
 
 ## Create the Conda environment
 Create the environment using the provided `spec-file.yml` file:
