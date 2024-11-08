@@ -2,7 +2,9 @@
 
 This repository contains code and resources for developing and testing Sequence-Aware Neural Networks for intrusion detection using the IEC 60870-5-104 Intrusion Detection Dataset. The work presented here is part of the work titled "Real-time Intrusion Detection with Sequence-Aware Neural Networks for the Internet of Medical Things," which was submitted to the IEEE Virtual Conferences on Communications (VCC) 2024 on September 1st, 2024.
 
-We utilize IEC 60870-5-104 Intrusion Detection Dataset available at https://ieee-dataport.org/documents/iec-60870-5-104-intrusion-detection-dataset to execute the experiments.
+
+## Dataset
+We use the IEC 60870-5-104 Intrusion Detection Dataset, available at https://ieee-dataport.org/documents/iec-60870-5-104-intrusion-detection-dataset, to conduct our experiments.
 
 ## Create the Conda environment
 Create the environment using the provided `spec-file.yml` file:
